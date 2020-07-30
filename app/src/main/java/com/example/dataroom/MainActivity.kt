@@ -15,6 +15,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,13 +47,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             .fallbackToDestructiveMigration().build()
         var c = 0
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkPermisson(this, permissionArray)) {
-                Toast.makeText(this, "có rồi", Toast.LENGTH_LONG).show()
-            } else {
+            if (! checkPermisson(this, permissionArray)) {
                 requestPermissions(permissionArray, PERMISSION_REQUEST)
             }
-        } else {
-            Toast.makeText(this, "có rồi", Toast.LENGTH_LONG).show()
         }
         Thread {
             list = db.dtDAO().readDT() as ArrayList<DanhThiep>
@@ -63,9 +60,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     fun test(view: View) {
         val i = Intent(
-            Intent.ACTION_GET_CONTENT,
+            Intent.ACTION_OPEN_DOCUMENT,
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         )
 
@@ -94,6 +92,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onClick(v: View?) {
         when (v) {
             btn_Add -> test(btn_Add)
